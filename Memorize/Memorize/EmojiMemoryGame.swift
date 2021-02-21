@@ -8,7 +8,7 @@
 import Foundation
 
 class EmojiMemoryGame: ObservableObject {
-    static private let emojis = ["👻", "🎃", "🕷"]
+    static private let emojis = ["🍎", "🍊", "🍌", "🍉", "🍇", "🍓"]
     
     @Published
     private var model = Game(numberOfPairsOfCards: emojis.count) { pairIndex in

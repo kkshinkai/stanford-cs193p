@@ -8,8 +8,8 @@
 import SwiftUI
 
 struct Grid<Item, ItemView>: View where Item: Identifiable, ItemView: View {
-    var items: [Item]
-    var content: (Item) -> ItemView
+    private var items: [Item]
+    private var content: (Item) -> ItemView
     
     init(_ items: [Item], content: @escaping (Item) -> ItemView) {
         self.items = items

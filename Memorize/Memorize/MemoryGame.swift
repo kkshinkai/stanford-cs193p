@@ -10,11 +10,10 @@ import Foundation
 typealias Game = MemoryGame<String>
 
 struct MemoryGame<CardContent> where CardContent: Equatable {
-    var cards: [Card]
+    private(set) var cards: [Card]
     
-    var indexOfTheOneAndOnlyFaceUpCard: Int? {
+    private var indexOfTheOneAndOnlyFaceUpCard: Int? {
         get {
-            // TODO: I don't like the array here.
             cards.indices.filter{ cards[$0].isFaceUp }.only
         }
         set {
@@ -53,8 +52,8 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
     
     struct Card: Identifiable {
         var content: CardContent
+        var id: Int
         var isFaceUp = false
         var isMatched = false
-        var id: Int
     }
 }
