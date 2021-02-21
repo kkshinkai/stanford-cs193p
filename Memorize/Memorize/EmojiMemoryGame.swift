@@ -7,14 +7,14 @@
 
 import Foundation
 
-class EmojiMemoryGame {
-    typealias Game = MemoryGame<String>
-    
+class EmojiMemoryGame: ObservableObject {
     static private let emojis = ["👻", "🎃", "🕷"]
-    private(set) var model = Game(numberOfPairsOfCards: emojis.count) { pairIndex in
+    
+    @Published
+    private var model = Game(numberOfPairsOfCards: emojis.count) { pairIndex in
         emojis[pairIndex]
     }
-    
+
     // MARK: - Access to the model
     
     var cards: [Game.Card] { model.cards }
@@ -22,6 +22,7 @@ class EmojiMemoryGame {
     // MARK: - Intent(s)
     
     func choose(card: Game.Card) {
+        objectWillChange.send()
         model.choose(card: card)
     }
 }
