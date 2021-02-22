@@ -11,15 +11,23 @@ struct EmojiMemoryGameView: View {
     @ObservedObject var viewModel: EmojiMemoryGame
     
     var body: some View {
-        Grid(viewModel.cards) { card in
-            CardView(card: card).onTapGesture {
-                viewModel.choose(card: card)
+        VStack {
+            Grid(viewModel.cards) { card in
+                CardView(card: card).onTapGesture {
+                    withAnimation(.linear(duration: 0.75)) {
+                        viewModel.choose(card: card)
+                    }
+                }
+                .padding(5)
             }
-            .padding(5)
+            .foregroundColor(.orange)
+            .padding()
+            Button {
+                withAnimation(.easeOut) {
+                    viewModel.resetGame()
+                }
+            } label: { Text("New Game") }
         }
-        .font(.largeTitle)
-        .foregroundColor(.orange)
-        .padding()
     }
 }
 
@@ -30,14 +38,37 @@ struct CardView: View {
         GeometryReader { geometry in
             if card.isFaceUp || !card.isMatched {
                 ZStack {
-                    Pie(startAngle: .degrees(-90), endAngle: .degrees(30))
-                        .padding(5)
-                        .opacity(0.4)
+                    Group {
+                        if card.isConsumingBonusTime {
+                            Pie(startAngle: .degrees(-90),
+                                endAngle: .degrees(-animatedBonusRemaining * 360 - 90))
+                                .onAppear { startBonusTimeAnimation() }
+                        } else {
+                            Pie(startAngle: .degrees(-90),
+                                endAngle: .degrees(-card.bounsRemaining * 360 - 90))
+                        }
+                    }
+                    .padding(5)
+                    .opacity(0.4)
+                    .transition(.identity)
                     Text(card.content)
                         .font(.system(size: fontSize(for: geometry.size)))
+                        .rotationEffect(.degrees(card.isMatched ? 360 : 0))
+                        .animation(card.isMatched
+                                    ? Animation.linear(duration: 1).repeatForever(autoreverses: false)
+                                    : .default)
                 }
                 .cardify(isFaceUp: card.isFaceUp)
+                .transition(AnyTransition.scale)
             }
+        }
+    }
+    
+    @State private var animatedBonusRemaining: Double = 0
+    private func startBonusTimeAnimation() {
+        animatedBonusRemaining = card.bounsRemaining
+        withAnimation(.linear(duration: card.bonusTimeRemaining)) {
+            animatedBonusRemaining = 0
         }
     }
     

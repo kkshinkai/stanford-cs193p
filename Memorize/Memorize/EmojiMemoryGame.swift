@@ -10,9 +10,16 @@ import Foundation
 class EmojiMemoryGame: ObservableObject {
     static private let emojis = ["🍎", "🍊", "🍌", "🍉", "🍇", "🍓"]
     
-    @Published
-    private var model = Game(numberOfPairsOfCards: emojis.count) { pairIndex in
-        emojis[pairIndex]
+    @Published private var model = createMemoryGame()
+    
+    private static func createMemoryGame() -> Game {
+        Game(numberOfPairsOfCards: emojis.count) { pairIndex in
+            emojis[pairIndex]
+        }
+    }
+    
+    func resetGame() {
+        model = EmojiMemoryGame.createMemoryGame()
     }
 
     // MARK: - Access to the model
