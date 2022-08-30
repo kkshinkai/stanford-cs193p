@@ -1,10 +1,3 @@
-//
-//  MemorizeApp.swift
-//  Memorize
-//
-//  Created by Kk Shinkai on 2022/8/29.
-//
-
 import SwiftUI
 
 @main
