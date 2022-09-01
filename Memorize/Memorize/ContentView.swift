@@ -1,18 +1,20 @@
 import SwiftUI
 
 struct ContentView: View {
-    var emojis = ["🍇", "🍈", "🍉", "🍊", "🍋", "🍌", "🍍", "🥭",
-                  "🍎", "🍏", "🍐", "🍑", "🍒", "🍓", "🫐", "🥝",
-                  "🍅", "🫒", "🥥", "🥑", "🍆", "🥔", "🥕", "🌽"]
-    @State var emojiCount = 20
+    // `@ObservedObject` means "if something changed, please rebuild my entire
+    // view body".
+    @ObservedObject var viewModel: EmojiMemoryGame
 
     var body: some View {
         VStack {
             ScrollView {
                 LazyVGrid(columns: [GridItem(.adaptive(minimum: 65))]) {
-                    ForEach(emojis[0..<emojiCount], id: \.self) { emoji in
-                        CardView(emoji: emoji)
+                    ForEach(viewModel.cards) { card in
+                        CardView(card: card)
                             .aspectRatio(2/3, contentMode: .fit)
+                            .onTapGesture {
+                                viewModel.choose(card)
+                            }
                     }
                 }
             }
@@ -23,35 +25,29 @@ struct ContentView: View {
 }
 
 struct CardView: View {
-    var emoji: String
-    
-    // `@State` is not just a way to make variables mutable, it
-    // turns `isFaceUp` into a pointer to a Boolean.
-    @State var isFaceUp = true
+    var card: MemoryGame<String>.Card
     
     var body: some View {
         ZStack {
             let shape = RoundedRectangle(cornerRadius: 20)
-            if isFaceUp {
+            if card.isFaceUp {
                 shape.fill().foregroundColor(.white)
                 shape.strokeBorder(lineWidth: 3)
-                Text(emoji).font(.largeTitle)
+                Text(card.content).font(.largeTitle)
+            } else if card.isMatched {
+                shape.opacity(0)
             } else {
                 shape.fill()
             }
-        }
-        .onTapGesture {
-            isFaceUp.toggle()
         }
     }
 }
 
 struct ContentView_Previews: PreviewProvider {
     static var previews: some View {
-        ContentView()
+        ContentView(viewModel: EmojiMemoryGame())
             .preferredColorScheme(.light)
-            .previewInterfaceOrientation(.portrait)
-        ContentView()
+        ContentView(viewModel: EmojiMemoryGame())
             .preferredColorScheme(.dark)
     }
 }
