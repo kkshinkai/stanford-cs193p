@@ -34,16 +34,15 @@ struct MemoryGame<CardContent> where CardContent: Equatable {
             return
         }
         
-        if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard {
+        if let potentialMatchIndex = indexOfTheOneAndOnlyFaceUpCard, potentialMatchIndex != chosenIndex {
             if cards[chosenIndex].content == cards[potentialMatchIndex].content {
                 cards[chosenIndex].isMatched = true
                 cards[potentialMatchIndex].isMatched = true
             }
-            indexOfTheOneAndOnlyFaceUpCard = nil
+            cards[chosenIndex].isFaceUp = true
         } else {
             indexOfTheOneAndOnlyFaceUpCard = chosenIndex
         }
-        cards[chosenIndex].isFaceUp.toggle()
     }
     
     struct Card: Identifiable {

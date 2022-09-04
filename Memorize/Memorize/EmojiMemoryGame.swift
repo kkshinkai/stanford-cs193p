@@ -15,7 +15,7 @@ class EmojiMemoryGame: ObservableObject {
 
     // `@Published` calls `objectWillChange.send()` (in `ObservableObject`)
     // every times the variable changed.
-    @Published private var model = MemoryGame<String>(numberOfPairOfCards: 4) {
+    @Published private var model = MemoryGame<String>(numberOfPairOfCards: 8) {
         emojis[$0]
     }
     
