@@ -15,8 +15,12 @@ class EmojiMemoryGame: ObservableObject {
 
     // `@Published` calls `objectWillChange.send()` (in `ObservableObject`)
     // every times the variable changed.
-    @Published private var model = MemoryGame<String>(numberOfPairOfCards: 8) {
-        emojis[$0]
+    @Published private var model = EmojiMemoryGame.createMemortGame()
+    
+    static func createMemortGame() -> MemoryGame<String> {
+        MemoryGame<String>(numberOfPairOfCards: 8) {
+            emojis[$0]
+        }
     }
     
     var cards: [Card] {
@@ -31,5 +35,13 @@ class EmojiMemoryGame: ObservableObject {
         // in memory. If our model is a database or network fetching, it could
         // be quite complicated.
         model.choose(card)
+    }
+    
+    func shuffle() {
+        model.shuffle()
+    }
+    
+    func restart() {
+        model = EmojiMemoryGame.createMemortGame()
     }
 }

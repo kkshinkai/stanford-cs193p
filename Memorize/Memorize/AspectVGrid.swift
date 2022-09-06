@@ -23,7 +23,8 @@ struct AspectVGrid<Item, ItemView>: View where Item: Identifiable, ItemView: Vie
                     itemAspectRatio: aspectRatio)
                 LazyVGrid(columns: [adaptiveGridItem(width: width)], spacing: 0) {
                     ForEach(items) { item in
-                        content(item).aspectRatio(aspectRatio, contentMode: .fit)
+                        content(item)
+                            .aspectRatio(aspectRatio, contentMode: .fit)
                     }
                 }
                 Spacer(minLength: 0)
